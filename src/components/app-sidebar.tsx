@@ -1,15 +1,7 @@
 "use client"
 
 import * as React from "react"
-import {
-  LayoutDashboard,
-  Wallet,
-  Receipt,
-  PieChart,
-  Target,
-  Sparkles,
-  ChevronRight,
-} from "lucide-react"
+import { Sparkles, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -25,39 +17,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
-
-const items = [
-  {
-    title: "Dashboard",
-    url: "/",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Income",
-    url: "/income",
-    icon: Wallet,
-  },
-  {
-    title: "Expenses",
-    url: "/expenses",
-    icon: Receipt,
-  },
-  {
-    title: "Budgets",
-    url: "/budgets",
-    icon: PieChart,
-  },
-  {
-    title: "Savings Goals",
-    url: "/savings",
-    icon: Target,
-  },
-  {
-    title: "AI Analysis",
-    url: "/analysis",
-    icon: Sparkles,
-  },
-]
+import { sidebarNavItems } from "@/data"
 
 export function AppSidebar() {
   const pathname = usePathname()
@@ -81,7 +41,7 @@ export function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {sidebarNavItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild

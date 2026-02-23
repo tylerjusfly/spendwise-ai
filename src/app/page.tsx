@@ -22,14 +22,7 @@ import {
   Cell,
 } from "recharts";
 import { Progress } from "@/components/ui/progress";
-
-const mockSpendingData = [
-  { name: 'Housing', value: 1200, color: '#337A2F' },
-  { name: 'Food', value: 450, color: '#2F7A72' },
-  { name: 'Ent.', value: 200, color: '#FFB800' },
-  { name: 'Util.', value: 150, color: '#1A5A1A' },
-  { name: 'Transp.', value: 300, color: '#4A90E2' },
-];
+import { mockSpendingData, totalIncome, totalExpenses, dashboardSavingsGoals } from "@/data";
 
 export default function Dashboard() {
   const [mounted, setMounted] = useState(false);
@@ -40,8 +33,6 @@ export default function Dashboard() {
 
   if (!mounted) return null;
 
-  const totalIncome = 5000;
-  const totalExpenses = 2300;
   const savingsRate = ((totalIncome - totalExpenses) / totalIncome * 100).toFixed(1);
 
   return (
@@ -155,27 +146,20 @@ export default function Dashboard() {
             <CardDescription>Track your progress towards big purchases</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-medium">New Car</span>
-                <span className="text-muted-foreground">$12,400 / $25,000</span>
-              </div>
-              <Progress value={49.6} className="h-2 bg-secondary" />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-medium">Emergency Fund</span>
-                <span className="text-muted-foreground">$8,500 / $10,000</span>
-              </div>
-              <Progress value={85} className="h-2 bg-secondary" />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-medium">Europe Trip</span>
-                <span className="text-muted-foreground">$1,200 / $4,500</span>
-              </div>
-              <Progress value={26.6} className="h-2 bg-secondary" />
-            </div>
+            {dashboardSavingsGoals.map((goal) => {
+              const progress = (goal.current / goal.target) * 100;
+              return (
+                <div key={goal.title} className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium">{goal.title}</span>
+                    <span className="text-muted-foreground">
+                      ${goal.current.toLocaleString()} / ${goal.target.toLocaleString()}
+                    </span>
+                  </div>
+                  <Progress value={progress} className="h-2 bg-secondary" />
+                </div>
+              );
+            })}
           </CardContent>
         </Card>
       </div>

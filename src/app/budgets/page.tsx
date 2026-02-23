@@ -7,20 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PieChart, Plus, CheckCircle2, AlertCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-
-interface Budget {
-  category: string;
-  limit: number;
-  spent: number;
-}
+import { initialBudgets, type Budget } from "@/data";
 
 export default function BudgetsPage() {
-  const [budgets, setBudgets] = useState<Budget[]>([
-    { category: 'Housing', limit: 1500, spent: 1200 },
-    { category: 'Food', limit: 500, spent: 450 },
-    { category: 'Entertainment', limit: 200, spent: 240 },
-    { category: 'Transport', limit: 300, spent: 180 },
-  ]);
+  const [budgets, setBudgets] = useState<Budget[]>(initialBudgets);
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">

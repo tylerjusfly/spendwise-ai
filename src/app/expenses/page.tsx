@@ -5,17 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { 
-  Receipt, 
-  Plus, 
-  Trash2, 
-  TrendingDown, 
-  ShoppingBag, 
-  Home, 
-  Coffee, 
-  Car, 
-  Utensils 
-} from "lucide-react";
+import { Receipt, Plus, Trash2, TrendingDown } from "lucide-react";
 import { 
   Select,
   SelectContent,
@@ -32,30 +22,10 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-
-interface Expense {
-  id: string;
-  item: string;
-  amount: number;
-  category: string;
-  date: string;
-}
-
-const CATEGORIES = [
-  { id: 'housing', label: 'Housing', icon: Home, color: 'text-blue-500 bg-blue-50' },
-  { id: 'food', label: 'Food & Groceries', icon: Utensils, color: 'text-orange-500 bg-orange-50' },
-  { id: 'entertainment', label: 'Entertainment', icon: ShoppingBag, color: 'text-purple-500 bg-purple-50' },
-  { id: 'dining', label: 'Dining Out', icon: Coffee, color: 'text-amber-500 bg-amber-50' },
-  { id: 'transport', label: 'Transportation', icon: Car, color: 'text-cyan-500 bg-cyan-50' },
-];
+import { expenseCategories, initialExpenses, type Expense } from "@/data";
 
 export default function ExpensesPage() {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    { id: '1', item: 'Monthly Rent', amount: 1200, category: 'housing', date: '2024-05-01' },
-    { id: '2', item: 'Grocery Haul', amount: 150, category: 'food', date: '2024-05-03' },
-    { id: '3', item: 'Movie Tickets', amount: 45, category: 'entertainment', date: '2024-05-05' },
-    { id: '4', item: 'Gas Refill', amount: 60, category: 'transport', date: '2024-05-07' },
-  ]);
+  const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
 
   const [newItem, setNewItem] = useState('');
   const [newAmount, setNewAmount] = useState('');
@@ -128,7 +98,7 @@ export default function ExpensesPage() {
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {CATEGORIES.map(cat => (
+                    {expenseCategories.map(cat => (
                       <SelectItem key={cat.id} value={cat.id}>{cat.label}</SelectItem>
                     ))}
                   </SelectContent>
@@ -171,7 +141,7 @@ export default function ExpensesPage() {
               </TableHeader>
               <TableBody>
                 {expenses.map((e) => {
-                  const cat = CATEGORIES.find(c => c.id === e.category) || CATEGORIES[0];
+                  const cat = expenseCategories.find(c => c.id === e.category) || expenseCategories[0];
                   return (
                     <TableRow key={e.id} className="hover:bg-secondary/10 transition-colors">
                       <TableCell className="text-muted-foreground text-xs">{e.date}</TableCell>

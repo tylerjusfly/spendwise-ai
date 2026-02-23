@@ -7,32 +7,16 @@ import { Sparkles, BrainCircuit, Lightbulb, AlertCircle, CheckCircle2, RefreshCc
 import { aiSpendingSuggestions, AISpendingSuggestionsOutput } from "@/ai/flows/ai-spending-suggestions-flow";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { mockAnalysisInput } from "@/data";
 
 export default function AnalysisPage() {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<AISpendingSuggestionsOutput | null>(null);
 
-  const mockInput = {
-    income: 5000,
-    expenses: [
-      { category: "Housing", amount: 1600 },
-      { category: "Food", amount: 800 },
-      { category: "Entertainment", amount: 500 },
-      { category: "Utilities", amount: 200 },
-      { category: "Transportation", amount: 400 },
-      { category: "Savings", amount: 500 },
-    ],
-    averageBudgets: [
-      { category: "Housing", percentage: 30 },
-      { category: "Food", percentage: 15 },
-      { category: "Entertainment", percentage: 10 },
-    ]
-  };
-
   const runAnalysis = async () => {
     setLoading(true);
     try {
-      const result = await aiSpendingSuggestions(mockInput);
+      const result = await aiSpendingSuggestions(mockAnalysisInput);
       setAnalysis(result);
     } catch (error) {
       console.error("Analysis failed", error);

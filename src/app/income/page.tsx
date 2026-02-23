@@ -6,27 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Wallet, Plus, Trash2, ArrowUpRight } from "lucide-react";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from "@/components/ui/table";
-
-interface IncomeSource {
-  id: string;
-  source: string;
-  amount: number;
-  frequency: string;
-}
+import { initialIncomeSources, type IncomeSource } from "@/data";
 
 export default function IncomePage() {
-  const [sources, setSources] = useState<IncomeSource[]>([
-    { id: '1', source: 'Primary Salary', amount: 4200, frequency: 'Monthly' },
-    { id: '2', source: 'Freelance Design', amount: 800, frequency: 'One-time' },
-  ]);
+  const [sources, setSources] = useState<IncomeSource[]>(initialIncomeSources);
 
   const [newSource, setNewSource] = useState('');
   const [newAmount, setNewAmount] = useState('');

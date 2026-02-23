@@ -8,20 +8,10 @@ import { Label } from "@/components/ui/label";
 import { Target, Plus, Sparkles, Trophy, Calendar, Zap } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { personalizedSavingSuggestions, PersonalizedSavingSuggestionsOutput } from "@/ai/flows/personalized-saving-suggestions-flow";
-
-interface Goal {
-  id: string;
-  title: string;
-  target: number;
-  current: number;
-  deadline?: string;
-}
+import { initialSavingsGoals, type Goal } from "@/data";
 
 export default function SavingsPage() {
-  const [goals, setGoals] = useState<Goal[]>([
-    { id: '1', title: 'New Car', target: 25000, current: 12400, deadline: 'Dec 2025' },
-    { id: '2', title: 'Emergency Fund', target: 10000, current: 8500 },
-  ]);
+  const [goals, setGoals] = useState<Goal[]>(initialSavingsGoals);
 
   const [aiSuggestions, setAiSuggestions] = useState<PersonalizedSavingSuggestionsOutput | null>(null);
   const [loading, setLoading] = useState(false);
@@ -31,8 +21,8 @@ export default function SavingsPage() {
     try {
       const suggestions = await personalizedSavingSuggestions({
         savingsGoal: goal.title,
-        currentIncome: 5000,
-        currentExpenses: 3000,
+        currentIncome: 700000,
+        currentExpenses: 300000,
         spendingPatternsSummary: "High spending on dining and entertainment.",
         existingSavings: goal.current,
         targetDate: goal.deadline
