@@ -3,14 +3,14 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { PieChart, Plus, CheckCircle2, AlertCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { initialBudgets, type Budget } from "@/data";
+import { useCurrency } from "@/context/currency-context";
 
 export default function BudgetsPage() {
   const [budgets, setBudgets] = useState<Budget[]>(initialBudgets);
+  const { symbol } = useCurrency();
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -55,16 +55,16 @@ export default function BudgetsPage() {
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-baseline">
                   <span className={`text-2xl font-bold ${isOver ? 'text-red-600' : 'text-foreground'}`}>
-                    ${budget.spent.toLocaleString()}
+                    {symbol}{budget.spent.toLocaleString()}
                   </span>
                   <span className="text-muted-foreground text-sm font-medium">
-                    of ${budget.limit.toLocaleString()}
+                    of {symbol}{budget.limit.toLocaleString()}
                   </span>
                 </div>
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs font-medium text-muted-foreground">
                     <span>{percentage.toFixed(0)}% utilized</span>
-                    <span>${Math.abs(budget.limit - budget.spent).toLocaleString()} {isOver ? 'over' : 'left'}</span>
+                    <span>{symbol}{Math.abs(budget.limit - budget.spent).toLocaleString()} {isOver ? 'over' : 'left'}</span>
                   </div>
                   <Progress 
                     value={Math.min(percentage, 100)} 

@@ -6,12 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, BrainCircuit, Lightbulb, AlertCircle, CheckCircle2, RefreshCcw } from "lucide-react";
 import { aiSpendingSuggestions, AISpendingSuggestionsOutput } from "@/ai/flows/ai-spending-suggestions-flow";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useCurrency } from "@/context/currency-context";
 import { mockAnalysisInput } from "@/data";
 
 export default function AnalysisPage() {
   const [loading, setLoading] = useState(false);
   const [analysis, setAnalysis] = useState<AISpendingSuggestionsOutput | null>(null);
+  const { symbol } = useCurrency();
 
   const runAnalysis = async () => {
     setLoading(true);
@@ -87,14 +88,14 @@ export default function AnalysisPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between mb-2">
-                  <div className="text-2xl font-bold">${analysis.fiftyThirtyTwentyAnalysis.needs.allocated}</div>
+                  <div className="text-2xl font-bold">{symbol}{analysis.fiftyThirtyTwentyAnalysis.needs.allocated}</div>
                   <div className={`px-2 py-0.5 rounded text-xs font-semibold ${
                     analysis.fiftyThirtyTwentyAnalysis.needs.status === 'On track' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
                   }`}>
                     {analysis.fiftyThirtyTwentyAnalysis.needs.status}
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground">Target: ${analysis.fiftyThirtyTwentyAnalysis.needs.target}</p>
+                <p className="text-xs text-muted-foreground">Target: {symbol}{analysis.fiftyThirtyTwentyAnalysis.needs.target}</p>
               </CardContent>
             </Card>
 
@@ -104,14 +105,14 @@ export default function AnalysisPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between mb-2">
-                  <div className="text-2xl font-bold">${analysis.fiftyThirtyTwentyAnalysis.wants.allocated}</div>
+                  <div className="text-2xl font-bold">{symbol}{analysis.fiftyThirtyTwentyAnalysis.wants.allocated}</div>
                   <div className={`px-2 py-0.5 rounded text-xs font-semibold ${
                     analysis.fiftyThirtyTwentyAnalysis.wants.status === 'On track' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                   }`}>
                     {analysis.fiftyThirtyTwentyAnalysis.wants.status}
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground">Target: ${analysis.fiftyThirtyTwentyAnalysis.wants.target}</p>
+                <p className="text-xs text-muted-foreground">Target: {symbol}{analysis.fiftyThirtyTwentyAnalysis.wants.target}</p>
               </CardContent>
             </Card>
 
@@ -121,14 +122,14 @@ export default function AnalysisPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between mb-2">
-                  <div className="text-2xl font-bold">${analysis.fiftyThirtyTwentyAnalysis.savingsDebt.allocated}</div>
+                  <div className="text-2xl font-bold">{symbol}{analysis.fiftyThirtyTwentyAnalysis.savingsDebt.allocated}</div>
                   <div className={`px-2 py-0.5 rounded text-xs font-semibold ${
                     analysis.fiftyThirtyTwentyAnalysis.savingsDebt.status === 'On track' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
                   }`}>
                     {analysis.fiftyThirtyTwentyAnalysis.savingsDebt.status}
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground">Target: ${analysis.fiftyThirtyTwentyAnalysis.savingsDebt.target}</p>
+                <p className="text-xs text-muted-foreground">Target: {symbol}{analysis.fiftyThirtyTwentyAnalysis.savingsDebt.target}</p>
               </CardContent>
             </Card>
           </div>
@@ -180,9 +181,9 @@ export default function AnalysisPage() {
                 {analysis.reallocationSuggestions.map((sug, i) => (
                   <div key={i} className="p-4 rounded-lg bg-green-50 border border-green-100">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-semibold text-muted-foreground line-through">${sug.fromCategory}</span>
-                      <span className="text-primary font-bold">→ ${sug.toCategory}</span>
-                      <span className="ml-auto font-bold text-primary">${sug.amount}</span>
+                      <span className="font-semibold text-muted-foreground line-through">{sug.fromCategory}</span>
+                      <span className="text-primary font-bold">→ {sug.toCategory}</span>
+                      <span className="ml-auto font-bold text-primary">{symbol}{sug.amount}</span>
                     </div>
                     <p className="text-sm text-green-900/70 italic">"{sug.reason}"</p>
                   </div>

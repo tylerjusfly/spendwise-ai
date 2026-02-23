@@ -5,6 +5,7 @@ import {
   PieChart,
   Target,
   Sparkles,
+  Settings,
 } from "lucide-react";
 
 export const sidebarNavItems = [
@@ -14,4 +15,5 @@ export const sidebarNavItems = [
   { title: "Budgets", url: "/budgets", icon: PieChart },
   { title: "Savings Goals", url: "/savings", icon: Target },
   { title: "AI Analysis", url: "/analysis", icon: Sparkles },
+  { title: "Settings", url: "/settings", icon: Settings },
 ];

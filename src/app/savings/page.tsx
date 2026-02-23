@@ -3,15 +3,15 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Target, Plus, Sparkles, Trophy, Calendar, Zap } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { personalizedSavingSuggestions, PersonalizedSavingSuggestionsOutput } from "@/ai/flows/personalized-saving-suggestions-flow";
-import { initialSavingsGoals, type Goal } from "@/data";
+import { initialSavingsGoals, type Goal, totalIncome, totalExpenses } from "@/data";
+import { useCurrency } from "@/context/currency-context";
 
 export default function SavingsPage() {
   const [goals, setGoals] = useState<Goal[]>(initialSavingsGoals);
+  const { symbol } = useCurrency();
 
   const [aiSuggestions, setAiSuggestions] = useState<PersonalizedSavingSuggestionsOutput | null>(null);
   const [loading, setLoading] = useState(false);
@@ -21,9 +21,9 @@ export default function SavingsPage() {
     try {
       const suggestions = await personalizedSavingSuggestions({
         savingsGoal: goal.title,
-        currentIncome: 700000,
-        currentExpenses: 300000,
-        spendingPatternsSummary: "High spending on dining and entertainment.",
+        currentIncome: totalIncome,
+        currentExpenses: totalExpenses,
+        spendingPatternsSummary: "Moderate spending on dining and entertainment.",
         existingSavings: goal.current,
         targetDate: goal.deadline
       });
@@ -53,7 +53,7 @@ export default function SavingsPage() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {goals.map((goal) => {
-          const progress = (goal.current / goal.target) * 100;
+          const progress = goal.target > 0 ? (goal.current / goal.target) * 100 : 0;
           return (
             <Card key={goal.id} className="border-none shadow-md overflow-hidden flex flex-col">
               <div className="h-1 w-full bg-secondary">
@@ -78,13 +78,13 @@ export default function SavingsPage() {
               </CardHeader>
               <CardContent className="flex-1 space-y-4">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-2xl font-bold">${goal.current.toLocaleString()}</span>
-                  <span className="text-muted-foreground text-sm">of ${goal.target.toLocaleString()}</span>
+                  <span className="text-2xl font-bold">{symbol}{goal.current.toLocaleString()}</span>
+                  <span className="text-muted-foreground text-sm">of {symbol}{goal.target.toLocaleString()}</span>
                 </div>
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs font-medium">
                     <span>{progress.toFixed(1)}% Complete</span>
-                    <span>${(goal.target - goal.current).toLocaleString()} remaining</span>
+                    <span>{symbol}{(goal.target - goal.current).toLocaleString()} remaining</span>
                   </div>
                   <Progress value={progress} className="h-2" />
                 </div>
@@ -146,7 +146,7 @@ export default function SavingsPage() {
                 <ul className="space-y-3">
                   {aiSuggestions.tips.map((tip, i) => (
                     <li key={i} className="flex items-start gap-3 text-foreground/80">
-                      <Lightbulb className="h-5 w-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+                      <Zap className="h-5 w-5 text-yellow-500 flex-shrink-0 mt-0.5" />
                       {tip}
                     </li>
                   ))}
@@ -157,7 +157,7 @@ export default function SavingsPage() {
             <div className="p-6 rounded-2xl bg-primary/10 border border-primary/20 grid gap-6 md:grid-cols-2 items-center">
               <div className="space-y-1">
                 <p className="text-sm font-semibold uppercase text-primary/70 tracking-wider">Potential Monthly Savings</p>
-                <p className="text-4xl font-bold text-primary">${aiSuggestions.potentialSavingsAmount.toLocaleString()}</p>
+                <p className="text-4xl font-bold text-primary">{symbol}{aiSuggestions.potentialSavingsAmount.toLocaleString()}</p>
               </div>
               <div className="space-y-1 md:text-right">
                 <p className="text-sm font-semibold uppercase text-primary/70 tracking-wider">Estimated Timeframe</p>
@@ -168,26 +168,5 @@ export default function SavingsPage() {
         </Card>
       )}
     </div>
-  );
-}
-
-function Lightbulb({ className }: { className?: string }) {
-  return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width="24" 
-      height="24" 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
-      className={className}
-    >
-      <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path>
-      <path d="M9 18h6"></path>
-      <path d="M10 22h4"></path>
-    </svg>
   );
 }

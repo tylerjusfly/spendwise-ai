@@ -23,9 +23,11 @@ import {
 } from "recharts";
 import { Progress } from "@/components/ui/progress";
 import { mockSpendingData, totalIncome, totalExpenses, dashboardSavingsGoals } from "@/data";
+import { useCurrency } from "@/context/currency-context";
 
 export default function Dashboard() {
   const [mounted, setMounted] = useState(false);
+  const { symbol } = useCurrency();
 
   useEffect(() => {
     setMounted(true);
@@ -51,7 +53,7 @@ export default function Dashboard() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalIncome.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{symbol}{totalIncome.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
               <span className="text-green-600 flex items-center font-medium"><ArrowUpRight className="h-3 w-3" /> 4.5%</span> from last month
             </p>
@@ -66,7 +68,7 @@ export default function Dashboard() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${totalExpenses.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{symbol}{totalExpenses.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
               <span className="text-red-600 flex items-center font-medium"><ArrowDownRight className="h-3 w-3" /> 2.1%</span> from last month
             </p>
@@ -94,7 +96,7 @@ export default function Dashboard() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${(totalIncome - totalExpenses).toLocaleString()}</div>
+            <div className="text-2xl font-bold">{symbol}{(totalIncome - totalExpenses).toLocaleString()}</div>
             <p className="text-xs text-primary-foreground/80 mt-1">Left to save or invest</p>
           </CardContent>
         </Card>
@@ -121,10 +123,12 @@ export default function Dashboard() {
                     axisLine={false} 
                     tickLine={false} 
                     tick={{ fill: '#666', fontSize: 12 }} 
+                    tickFormatter={(value) => `${symbol}${value.toLocaleString()}`}
                   />
                   <Tooltip 
                     cursor={{ fill: 'transparent' }}
                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                    formatter={(value: number) => [`${symbol}${value.toLocaleString()}`, "Amount"]}
                   />
                   <Bar dataKey="value" radius={[6, 6, 0, 0]} barSize={40}>
                     {mockSpendingData.map((entry, index) => (
@@ -147,16 +151,16 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent className="space-y-6">
             {dashboardSavingsGoals.map((goal) => {
-              const progress = (goal.current / goal.target) * 100;
+              const progress = (goal.current / (goal.target || 1)) * 100;
               return (
                 <div key={goal.title} className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="font-medium">{goal.title}</span>
                     <span className="text-muted-foreground">
-                      ${goal.current.toLocaleString()} / ${goal.target.toLocaleString()}
+                      {symbol}{goal.current.toLocaleString()} / {symbol}{goal.target.toLocaleString()}
                     </span>
                   </div>
-                  <Progress value={progress} className="h-2 bg-secondary" />
+                  <Progress value={goal.target > 0 ? progress : 0} className="h-2 bg-secondary" />
                 </div>
               );
             })}

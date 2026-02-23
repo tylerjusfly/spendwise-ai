@@ -23,9 +23,11 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { expenseCategories, initialExpenses, type Expense } from "@/data";
+import { useCurrency } from "@/context/currency-context";
 
 export default function ExpensesPage() {
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
+  const { symbol } = useCurrency();
 
   const [newItem, setNewItem] = useState('');
   const [newAmount, setNewAmount] = useState('');
@@ -65,7 +67,7 @@ export default function ExpensesPage() {
             </div>
             <div>
               <p className="text-xs uppercase opacity-80 font-bold">Total Spent</p>
-              <p className="text-2xl font-bold">${totalSpent.toLocaleString()}</p>
+              <p className="text-2xl font-bold">{symbol}{totalSpent.toLocaleString()}</p>
             </div>
           </div>
         </Card>
@@ -106,13 +108,17 @@ export default function ExpensesPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="amount">Amount</Label>
-                <Input 
-                  id="amount" 
-                  type="number" 
-                  placeholder="0.00" 
-                  value={newAmount}
-                  onChange={(e) => setNewAmount(e.target.value)}
-                />
+                <div className="relative">
+                   <span className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground font-medium">{symbol}</span>
+                  <Input 
+                    id="amount" 
+                    type="number" 
+                    placeholder="0.00" 
+                    className="pl-7"
+                    value={newAmount}
+                    onChange={(e) => setNewAmount(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
             <Button onClick={addExpense} className="w-full bg-accent hover:bg-accent/90">
@@ -152,7 +158,7 @@ export default function ExpensesPage() {
                           {cat.label}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-right font-bold text-foreground">${e.amount.toLocaleString()}</TableCell>
+                      <TableCell className="text-right font-bold text-foreground">{symbol}{e.amount.toLocaleString()}</TableCell>
                       <TableCell>
                         <Button 
                           variant="ghost" 

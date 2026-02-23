@@ -15,9 +15,11 @@ import {
   TableRow
 } from "@/components/ui/table";
 import { initialIncomeSources, type IncomeSource } from "@/data";
+import { useCurrency } from "@/context/currency-context";
 
 export default function IncomePage() {
   const [sources, setSources] = useState<IncomeSource[]>(initialIncomeSources);
+  const { symbol } = useCurrency();
 
   const [newSource, setNewSource] = useState('');
   const [newAmount, setNewAmount] = useState('');
@@ -55,7 +57,7 @@ export default function IncomePage() {
             </div>
             <div>
               <p className="text-xs uppercase opacity-80 font-bold">Total Monthly</p>
-              <p className="text-2xl font-bold">${totalMonthly.toLocaleString()}</p>
+              <p className="text-2xl font-bold">{symbol}{totalMonthly.toLocaleString()}</p>
             </div>
           </div>
         </Card>
@@ -83,7 +85,7 @@ export default function IncomePage() {
             <div className="space-y-2">
               <Label htmlFor="amount">Monthly Amount</Label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                <span className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground font-medium">{symbol}</span>
                 <Input 
                   id="amount" 
                   type="number" 
@@ -122,7 +124,7 @@ export default function IncomePage() {
                   <TableRow key={item.id} className="hover:bg-secondary/10 transition-colors">
                     <TableCell className="font-medium">{item.source}</TableCell>
                     <TableCell className="text-muted-foreground">{item.frequency}</TableCell>
-                    <TableCell className="text-right font-bold text-primary">${item.amount.toLocaleString()}</TableCell>
+                    <TableCell className="text-right font-bold text-primary">{symbol}{item.amount.toLocaleString()}</TableCell>
                     <TableCell>
                       <Button 
                         variant="ghost" 
@@ -141,25 +143,5 @@ export default function IncomePage() {
         </Card>
       </div>
     </div>
-  );
-}
-
-function DollarSign({ className }: { className?: string }) {
-  return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width="24" 
-      height="24" 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
-      className={className}
-    >
-      <line x1="12" y1="1" x2="12" y2="23"></line>
-      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-    </svg>
   );
 }
